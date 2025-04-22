@@ -18,15 +18,43 @@ function Create() {
   const [success, setSuccess] = useState('');
   const [imgurImages, setImgurImages] = useState([]);
 
+  const fallbackImages = [
+    {
+      id: "poPj7WF",
+      link: "https://i.imgur.com/poPj7WF.jpeg",
+      name: "Fallback 1",
+    },
+    {
+      id: "bApbUK6",
+      link: "https://i.imgur.com/bApbUK6.jpeg",
+      name: "Fallback 2",
+    },
+    {
+      id: "XPQpwkb",
+      link: "https://i.imgur.com/XPQpwkb.jpeg",
+      name: "Fallback 3",
+    },
+    {
+      id: "WPxAfPR",
+      link: "https://i.imgur.com/WPxAfPR.jpeg",
+      name: "Fallback 4",
+    },
+  ];
+  
   useEffect(() => {
     const fetchImgurImages = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/imgur`);
         const data = await res.json();
-        console.log("Imgur images:", data.data);
-        setImgurImages(data.data);
+        if (Array.isArray(data.data)) {
+          setImgurImages(data.data);
+        } else {
+          console.warn("Imgur format unexpected, using fallback");
+          setImgurImages(fallbackImages);
+        }
       } catch (err) {
-        console.error("Imgur proxy fetch failed", err);
+        console.error("Imgur fetch failed, using fallback");
+        setImgurImages(fallbackImages);
       }
     };
   
