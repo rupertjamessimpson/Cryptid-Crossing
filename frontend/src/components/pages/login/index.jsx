@@ -1,65 +1,74 @@
 import { useState } from "react";
+import "./index.css";
+import API_BASE_URL from "../../../config";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/login", {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("Log in successful! Username and password recognized.");
         setError("");
+        window.location.href = "/shows";
       } else {
         setError(data.error || "Something went wrong!");
-        setSuccessMessage("");
       }
     } catch (err) {
       setError("An error occurred during login.");
-      setSuccessMessage("");
     }
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <br />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <br />
-        <input type="submit" value="Login" />
-      </form>
+      <div className="login-form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+          <div className="form-row">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="button-container">
+            <button className="login-button" type="submit">
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {error && <div style={{ color: "red", marginTop: "1rem" }}>{error}</div>}
     </div>
   );
 }

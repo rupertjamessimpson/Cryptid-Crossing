@@ -1,0 +1,16 @@
+.details {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.edit-button {
+  color: red;
+  text-decoration: none;
+}
+
+.edit-button:hover {
+  text-decoration: underline;
+}

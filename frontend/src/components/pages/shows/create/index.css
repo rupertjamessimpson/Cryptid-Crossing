@@ -1,0 +1,63 @@
+.create-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column
+}
+
+.create-form {
+  border: 1px solid #ccc;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  background-color: #fffef4;
+}
+
+.create-form form > div {
+  margin-bottom: 1rem;
+}
+
+.create-form input,
+.create-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.form-checkbox {
+  display: flex;
+}
+
+.create-button {
+  all: unset;
+  color: red;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.create-button:hover {
+  text-decoration: underline;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-row label {
+  width: 100px;
+  margin-right: 1rem;
+  text-align: left;
+}
+
+.form-row input,
+.form-row textarea {
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}

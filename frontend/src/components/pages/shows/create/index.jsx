@@ -1,15 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import "./index.css";
+import API_BASE_URL from '../../../../config';
 
-function CreateShow() {
+function Create() {
+  const navigate = useNavigate();
+
   const [image_url, setImageUrl] = useState('');
   const [description, setDescription] = useState('');
   const [venue, setVenue] = useState('');
-  const [month, setMonth] = useState(5);
-  const [day, setDay] = useState(5);
+  const [month, setMonth] = useState(1);
+  const [day, setDay] = useState(1);
   const [year, setYear] = useState(2025);
-  const [published, setPublished] = useState(true);
+  const [published, setPublished] = useState(false);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [imgurImages, setImgurImages] = useState([]);
+
+  useEffect(() => {
+    const fetchImgurImages = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/imgur`);
+        const data = await res.json();
+        console.log("Imgur images:", data.data);
+        setImgurImages(data.data);
+      } catch (err) {
+        console.error("Imgur proxy fetch failed", err);
+      }
+    };
+  
+    fetchImgurImages();
+  }, []);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/me`, {
+          credentials: 'include'
+        });
+        if (res.ok) {
+        } else {
+          navigate('/login');
+        }
+      } catch {
+        navigate('/login');
+      }
+    };
+  
+    checkLogin();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +60,7 @@ function CreateShow() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/shows', {
+      const response = await fetch(`${API_BASE_URL}/shows`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,39 +95,52 @@ function CreateShow() {
   };
 
   return (
-    <div>
-      <h3>Create Show</h3>
+    <div className='create-container'>
+      <h3>New Show</h3>
+      <div className='create-form'>
       <form onSubmit={handleSubmit}>
-        <div>
-          <textarea
-            id="description"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div>
+        <div className="form-row">
+          <label htmlFor="venue">Venue</label>
           <input
             type="text"
             id="venue"
-            placeholder="Venue"
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
             required
           />
         </div>
-        <div>
-          <input
-            type="text"
-            id="image_url"
-            placeholder="Image URL"
-            value={image_url}
-            onChange={(e) => setImageUrl(e.target.value)}
+
+        <div className="form-row">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
-        <div>
+
+        <div className="form-row">
+          <label htmlFor="image_url">Select Image</label>
+          <select
+            id="image_url"
+            value={image_url}
+            onChange={(e) => setImageUrl(e.target.value)}
+          >
+            <option value="">-- Select an image --</option>
+            {imgurImages.map((img) => (
+              <option key={img.id} value={img.link}>
+                {img.name || img.id}
+              </option>
+            ))}
+          </select>
+          {image_url && (
+            <img src={image_url} alt="Selected" style={{ marginTop: "10px", maxWidth: "200px" }} />
+          )}
+        </div>
+
+        <div className="form-row">
+          <label htmlFor="month">Month</label>
           <input
             type="number"
             id="month"
@@ -96,7 +149,9 @@ function CreateShow() {
             required
           />
         </div>
-        <div>
+
+        <div className="form-row">
+          <label htmlFor="day">Day</label>
           <input
             type="number"
             id="day"
@@ -105,7 +160,9 @@ function CreateShow() {
             required
           />
         </div>
-        <div>
+
+        <div className="form-row">
+          <label htmlFor="year">Year</label>
           <input
             type="number"
             id="year"
@@ -114,19 +171,22 @@ function CreateShow() {
             required
           />
         </div>
-        <div>
-          <label>
-            Published:
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={() => setPublished(!published)}
-            />
-          </label>
+
+        <div className="form-row">
+          <label htmlFor="published">Publish?</label>
+          <input
+            id="published"
+            type="checkbox"
+            checked={published}
+            onChange={() => setPublished(!published)}
+          />
         </div>
-        <button type="submit">Create Show</button>
+        <div className='button-container'>
+          <button className="create-button" type="submit">Create Show</button>
+        </div>
       </form>
 
+      </div>
       <div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
         {success && <div style={{ color: 'green' }}>{success}</div>}
@@ -135,4 +195,4 @@ function CreateShow() {
   );
 }
 
-export default CreateShow;
+export default Create;

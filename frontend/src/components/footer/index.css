@@ -1,0 +1,24 @@
+.footer a {
+  color: red;
+  text-decoration: none;
+  padding-right: 11px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.logout-link {
+  padding: 0;
+  padding-right: 11px;
+  background: none;
+  border: none;
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.logout-link:hover {
+  text-decoration: underline;
+}

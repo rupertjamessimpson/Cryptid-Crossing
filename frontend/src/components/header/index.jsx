@@ -1,9 +1,29 @@
+import { useLocation } from "react-router-dom";
+import "./index.css";
+
 function Header() {
+  const location = useLocation();
+  const path = location.pathname;
+
   return (
-    <div>
-      <h1>Cryptid Crossing</h1>
+    <div className="header">
+      <img src="/images/Logo.png" alt="Cryptid Crossing Logo" />
+      <nav className="folder-tabs">
+        <a
+          href="/shows"
+          className={`tab ${path.startsWith("/shows") ? "" : "active"}`}
+        >
+          Shows
+        </a>
+        <a
+          href="/development"
+          className={`tab ${path.startsWith("/development") ? "" : "active"}`}
+        >
+          Development
+        </a>
+      </nav>
     </div>
-  )
+  );
 }
 
 export default Header;
